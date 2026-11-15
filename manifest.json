@@ -1,7 +1,7 @@
 {
   "name": "AI게임장",
   "short_name": "AI게임장",
-  "start_url": "./arcade.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#020617",
