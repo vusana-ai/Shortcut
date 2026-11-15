@@ -12,6 +12,8 @@
   <link rel="manifest" href="./manifest.json" />
   <title>AI게임장 — 바로가기 & 앱 설치</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <!-- 토스페이먼츠 결제위젯 SDK v2 -->
+  <script src="https://js.tosspayments.com/v2/standard"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -131,10 +133,10 @@
                 AI게임장 모든게임 VIP혜택
               </span>
             </div>
-            <div id="vipStatusSubText" class="text-[11px] text-purple-200/80 truncate mt-0.5">전 게임 통합 계정 · VIP 전용 특전 & 서버 저장</div>
+            <div id="vipStatusSubText" class="text-[11px] text-purple-200/80 truncate mt-0.5">전 게임 통합 계정 · 토스 결제 후 VIP 즉시 적용</div>
           </div>
         </div>
-        <button id="vipSignupBtn" type="button"
+        <button id="vipOpenModalBtn" type="button"
           class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 hover:brightness-110 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-purple-500/25 transition shrink-0 cursor-pointer">
           VIP 가입
         </button>
@@ -151,82 +153,78 @@
     </footer>
   </div>
 
-  <!-- VIP 회원가입 & 통합 계정 로그인 모달 (용사키우기 전화번호 8자리 + PIN 4자리 양식 유지) -->
-  <div id="vipModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-    <div class="w-full max-w-sm bg-gradient-to-b from-slate-900 via-purple-950/35 to-slate-900 border-2 border-purple-400/60 rounded-2xl p-5 shadow-2xl shadow-purple-500/20">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">👑</span>
-          <h2 class="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-purple-200 to-fuchsia-300">
-            AI게임장 모든게임 VIP혜택
-          </h2>
+  <!-- VIP 결제 & 회원가입 팝업 모달 (토스페이먼츠 위젯 연동) -->
+  <div id="vipModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-purple-500/60 rounded-2xl shadow-2xl shadow-purple-950/60 overflow-hidden my-auto">
+      
+      <!-- 상단 헤더 -->
+      <div class="bg-gradient-to-r from-purple-950 via-indigo-950 to-slate-900 px-5 py-4 border-b border-purple-500/30 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-xl bg-amber-400/20 border border-amber-400/50 flex items-center justify-center text-xl">👑</span>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h2 class="text-base sm:text-lg font-black text-amber-300 tracking-tight">AI게임장 VIP 패키지</h2>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-fuchsia-500/25 text-fuchsia-200 border border-fuchsia-400/40">7,000원 / 평생 적용</span>
+            </div>
+            <p class="text-[11px] text-slate-300 mt-0.5">토스 결제 완료 후 VIP 권한이 즉시 부여됩니다[cite: 3]!</p>
+          </div>
         </div>
-        <button id="closeVipModalBtn" type="button" class="text-slate-400 hover:text-slate-200 text-sm font-bold px-2 py-1 cursor-pointer">✕</button>
+        <button id="vipCloseBtn" type="button" class="text-slate-400 hover:text-white text-base font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition cursor-pointer">✕</button>
       </div>
 
-      <!-- VIP 핵심 혜택 홍보 박스 -->
-      <div class="text-left text-xs text-slate-200 bg-slate-950/85 border border-purple-500/35 rounded-xl p-3 space-y-1.5 mb-3.5">
-        <div class="text-[10px] font-black text-amber-300 tracking-wider mb-1">✨ ALL-GAME VIP MEMBERSHIP 혜택</div>
-        <div class="flex items-start gap-2">
-          <span class="text-amber-400 font-bold">✔</span>
-          <span><b>AI게임장 전 게임 데이터 서버 영구 저장</b> & 통합 연동</span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span class="text-amber-400 font-bold">✔</span>
-          <span>전 게임 <b>VIP 전용 특전·보상 및 특별 쿠폰</b> 자동 적용</span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span class="text-amber-400 font-bold">✔</span>
-          <span>실시간 명예의 전당 <b>통합 랭킹 등록</b> 및 우선 이벤트 혜택</span>
-        </div>
-      </div>
+      <!-- 본문 영역 -->
+      <div class="p-4 sm:p-5 max-h-[78vh] overflow-y-auto flex flex-col gap-4">
+        
+        <!-- 계정 입력 폼 (전화번호 뒷 8자리 + PIN 4자리) -->
+        <div class="bg-slate-950/90 border border-purple-500/30 rounded-xl p-3.5">
+          <div class="text-xs font-extrabold text-purple-300 mb-2.5 flex items-center gap-1.5">
+            <span>👤</span>
+            <span>VIP 계정 정보 입력 (데이터 저장용)</span>
+          </div>
+          
+          <div class="flex flex-col gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-300 mb-1">아이디 (휴대폰 번호 뒷 8자리)</label>
+              <div class="flex items-center rounded-xl bg-slate-900 border border-slate-700 focus-within:border-amber-400 overflow-hidden">
+                <span class="px-3 py-2 bg-slate-950 text-amber-300 font-extrabold text-xs border-r border-slate-800 select-none">
+                  010 -
+                </span>
+                <input id="authPhoneDigits" type="tel" inputmode="numeric" maxlength="9" required
+                  placeholder="1234-5678"
+                  class="w-full px-3 py-2 bg-transparent text-xs font-bold tracking-wider text-slate-100 focus:outline-none" />
+              </div>
+            </div>
 
-      <p class="text-[11px] text-slate-400 leading-relaxed mb-3">
-        휴대폰 번호 뒷 8자리와 숫자 비밀번호 4자리로 간편하게 VIP 계정을 등록하거나 기존 계정에 로그인하세요.
-      </p>
-
-      <!-- 간편 회원가입 / 기존 계정 로그인 탭 (용사키우기 양식) -->
-      <div class="flex rounded-xl bg-slate-950 p-1 border border-slate-800 mb-3.5">
-        <button id="modeRegisterBtn" type="button" class="flex-1 py-1.5 rounded-lg text-xs font-extrabold bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 text-slate-950 transition cursor-pointer">
-          VIP 간편 회원가입
-        </button>
-        <button id="modeLoginBtn" type="button" class="flex-1 py-1.5 rounded-lg text-xs font-extrabold text-slate-400 hover:text-slate-200 transition cursor-pointer">
-          기존 계정 로그인
-        </button>
-      </div>
-
-      <form id="authForm" class="flex flex-col gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1.5">아이디 (휴대폰 번호 뒷 8자리)</label>
-          <div class="flex items-center rounded-xl bg-slate-950 border border-slate-700 focus-within:border-amber-400 overflow-hidden">
-            <span class="px-3 py-2.5 bg-slate-900 text-amber-300 font-extrabold text-sm border-r border-slate-800 select-none">
-              010 -
-            </span>
-            <input id="authPhoneDigits" type="tel" inputmode="numeric" maxlength="9" required
-              placeholder="1234-5678 (숫자 8자리)"
-              class="w-full px-3 py-2.5 bg-transparent text-sm font-bold tracking-wider text-slate-100 focus:outline-none" />
+            <div>
+              <label class="block text-[11px] font-bold text-slate-300 mb-1">비밀번호 (숫자 4자리)</label>
+              <input id="authPinCode" type="password" inputmode="numeric" maxlength="4" pattern="\d{4}" required
+                placeholder="숫자 4자리 입력"
+                class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold tracking-[0.35em] text-slate-100 focus:outline-none focus:border-amber-400" />
+            </div>
           </div>
         </div>
 
-        <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1.5">비밀번호 (숫자 4자리)</label>
-          <input id="authPinCode" type="password" inputmode="numeric" maxlength="4" pattern="\d{4}" required
-            placeholder="숫자 4자리 입력 (예: 1234)"
-            class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-bold tracking-[0.35em] text-slate-100 focus:outline-none focus:border-amber-400" />
+        <!-- 토스페이먼츠 결제위젯 렌더링 영역 -->
+        <div class="bg-white rounded-xl overflow-hidden border border-slate-300 shadow-inner">
+          <div id="tossWidgetLoading" class="py-6 text-center text-xs font-bold text-slate-500">
+            토스페이먼츠 결제창을 불러오는 중입니다...
+          </div>
+          <div id="toss-payment-method"></div>
+          <div id="toss-agreement"></div>
         </div>
 
-        <div id="authErrorMsg" class="hidden text-xs text-rose-400 font-semibold bg-rose-950/40 border border-rose-800/50 rounded-lg px-3 py-2"></div>
-
-        <button id="authSubmitBtn" type="submit"
-          class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 hover:brightness-110 text-slate-950 shadow-lg shadow-purple-500/20 transition mt-0.5 cursor-pointer">
-          👑 VIP 간편 회원가입 완료하기
+        <!-- 하단 결제하기 버튼 (결제 완료 후 VIP 적용) -->
+        <button id="vipPaySubmitBtn" type="button" disabled
+          class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 disabled:from-slate-700 disabled:to-slate-800 disabled:text-slate-400 active:scale-[0.99] text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>💳</span>
+          <span id="vipPaySubmitBtnText">7,000원 결제하고 VIP 가입하기</span>
         </button>
 
         <button id="logoutBtn" type="button"
           class="hidden w-full py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-rose-950/70 text-slate-300 hover:text-rose-300 border border-slate-700 transition cursor-pointer">
           현재 계정 로그아웃
         </button>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -265,12 +263,11 @@
 
   <script>
     (() => {
-      // Service Worker 등록
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
 
-      // 클라우드 서버 설정 (용사키우기와 동일한 서버 및 스토리지 키 공유)
+      // 클라우드 서버 설정
       const GAME_ID = 'clicker';
       const CLOUD_API_URL = 'https://02826k.duckdns.org';
       const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -278,15 +275,16 @@
 
       const TOKEN_KEY = 'hero_clicker_jwt_token';
       const USER_KEY = 'hero_clicker_username';
-      const ADMIN_VIP_PHONES = ['010-9485-0928'];
 
       let authToken = localStorage.getItem(TOKEN_KEY) || null;
       let currentUsername = localStorage.getItem(USER_KEY) || null;
-      let isRegisterMode = true;
 
-      function isAdminAccount(username) {
-        return username && ADMIN_VIP_PHONES.includes(username.trim());
-      }
+      // 토스페이먼츠 설정
+      const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+      const VIP_PRICE = 7000;
+
+      let tossWidgets = null;
+      let isTossWidgetRendered = false;
 
       let toastTimer = null;
       function showToast(msg) {
@@ -299,10 +297,10 @@
         toastTimer = setTimeout(() => {
           box.classList.remove('opacity-100', 'translate-y-0');
           box.classList.add('opacity-0', 'translate-y-2');
-        }, 2500);
+        }, 2800);
       }
 
-      // 1번: 안드로이드 / 윈도우 바로가기 (원본 로직 유지)
+      // 1번: 안드로이드 / 윈도우 바로가기
       let deferredInstallPrompt = null;
       const installBtn = document.getElementById('androidInstallBtn');
       const installBtnText = document.getElementById('androidInstallBtnText');
@@ -384,7 +382,7 @@
         }
       });
 
-      // 3번: AI게임장 APK 설치하기 (aigames.apk 존재 여부 확인 후 다운로드)
+      // 3번: AI게임장 APK 설치하기
       document.getElementById('apkDownloadBtn').addEventListener('click', async () => {
         try {
           const res = await fetch('./aigames.apk', { method: 'HEAD' });
@@ -404,61 +402,75 @@
         }
       });
 
-      // 5번: VIP 회원가입 / 로그인 (휴대폰 8자리 + 비밀번호 4자리)
+      // 5번: VIP 결제 및 토스 위젯 팝업 관리
       const vipModal = document.getElementById('vipModal');
-      const vipSignupBtn = document.getElementById('vipSignupBtn');
+      const vipOpenModalBtn = document.getElementById('vipOpenModalBtn');
+      const vipCloseBtn = document.getElementById('vipCloseBtn');
+      const vipPaySubmitBtn = document.getElementById('vipPaySubmitBtn');
+      const vipPaySubmitBtnText = document.getElementById('vipPaySubmitBtnText');
+      const tossWidgetLoading = document.getElementById('tossWidgetLoading');
       const vipStatusSubText = document.getElementById('vipStatusSubText');
-      const modeRegisterBtn = document.getElementById('modeRegisterBtn');
-      const modeLoginBtn = document.getElementById('modeLoginBtn');
-      const authSubmitBtn = document.getElementById('authSubmitBtn');
-      const authErrorMsg = document.getElementById('authErrorMsg');
       const phoneInput = document.getElementById('authPhoneDigits');
       const pinInput = document.getElementById('authPinCode');
       const logoutBtn = document.getElementById('logoutBtn');
 
       function updateVipBannerUI() {
         if (authToken && currentUsername) {
-          const adminTag = isAdminAccount(currentUsername) ? ' 👑관리자' : '';
-          vipSignupBtn.textContent = 'VIP 계정';
-          vipStatusSubText.textContent = `📱 ${currentUsername}${adminTag} · 전 게임 통합 연동 중`;
+          vipOpenModalBtn.textContent = 'VIP 적용됨';
+          vipStatusSubText.textContent = `📱 ${currentUsername} · VIP 멤버십 활성화 완료`;
           logoutBtn.classList.remove('hidden');
         } else {
-          vipSignupBtn.textContent = 'VIP 가입';
-          vipStatusSubText.textContent = '전 게임 통합 계정 · VIP 전용 특전 & 서버 저장';
+          vipOpenModalBtn.textContent = 'VIP 가입';
+          vipStatusSubText.textContent = '전 게임 통합 계정 · 토스 결제 후 VIP 즉시 적용';
           logoutBtn.classList.add('hidden');
         }
       }
 
-      function setAuthMode(register) {
-        isRegisterMode = register;
-        authErrorMsg.classList.add('hidden');
-        if (register) {
-          modeRegisterBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-extrabold bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 text-slate-950 transition cursor-pointer';
-          modeLoginBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-extrabold text-slate-400 hover:text-slate-200 transition cursor-pointer';
-          authSubmitBtn.textContent = '👑 VIP 간편 회원가입 완료하기';
-        } else {
-          modeLoginBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-extrabold bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 text-slate-950 transition cursor-pointer';
-          modeRegisterBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-extrabold text-slate-400 hover:text-slate-200 transition cursor-pointer';
-          authSubmitBtn.textContent = '👑 기존 VIP 계정 로그인';
+      function openVipModal() {
+        vipModal.classList.remove('hidden');
+        initTossPaymentWidget();
+      }
+
+      async function initTossPaymentWidget() {
+        if (isTossWidgetRendered && tossWidgets) {
+          vipPaySubmitBtn.disabled = false;
+          return;
+        }
+
+        if (typeof TossPayments === 'undefined') {
+          tossWidgetLoading.textContent = '⚠️ 토스페이먼츠 SDK를 불러오지 못했습니다. 네트워크를 확인해 주세요.';
+          return;
+        }
+
+        try {
+          tossWidgetLoading.classList.remove('hidden');
+          tossWidgetLoading.textContent = '토스페이먼츠 결제창을 불러오는 중입니다...';
+          vipPaySubmitBtn.disabled = true;
+
+          const tossPayments = TossPayments(TOSS_CLIENT_KEY);
+          tossWidgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
+
+          await tossWidgets.setAmount({ currency: 'KRW', value: VIP_PRICE });
+
+          await Promise.all([
+            tossWidgets.renderPaymentMethods({ selector: '#toss-payment-method', variantKey: 'DEFAULT' }),
+            tossWidgets.renderAgreement({ selector: '#toss-agreement', variantKey: 'AGREEMENT' })
+          ]);
+
+          isTossWidgetRendered = true;
+          tossWidgetLoading.classList.add('hidden');
+          vipPaySubmitBtn.disabled = false;
+        } catch (err) {
+          console.error('Toss Widget Error:', err);
+          tossWidgetLoading.textContent = '⚠️ 결제 위젯 로드 중 오류가 발생했습니다.';
         }
       }
 
-      vipSignupBtn.addEventListener('click', () => {
-        setAuthMode(!authToken);
-        vipModal.classList.remove('hidden');
-        setTimeout(() => phoneInput.focus(), 50);
-      });
-
-      document.getElementById('closeVipModalBtn').addEventListener('click', () => {
-        vipModal.classList.add('hidden');
-      });
-
+      vipOpenModalBtn.addEventListener('click', openVipModal);
+      vipCloseBtn.addEventListener('click', () => vipModal.classList.add('hidden'));
       vipModal.addEventListener('click', (e) => {
         if (e.target === vipModal) vipModal.classList.add('hidden');
       });
-
-      modeRegisterBtn.addEventListener('click', () => setAuthMode(true));
-      modeLoginBtn.addEventListener('click', () => setAuthMode(false));
 
       phoneInput.addEventListener('input', (e) => {
         const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
@@ -483,68 +495,54 @@
         showToast('로그아웃되었습니다.');
       });
 
-      document.getElementById('authForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        authErrorMsg.classList.add('hidden');
-
+      // 토스페이먼츠 결제 요청 (결제 성공 후 서버 가입/VIP 처리)
+      vipPaySubmitBtn.addEventListener('click', async () => {
         const rawDigits = phoneInput.value.replace(/\D/g, '');
         const pin = pinInput.value.trim();
 
         if (rawDigits.length !== 8) {
-          authErrorMsg.textContent = '휴대폰 번호 뒷 8자리 숫자를 모두 입력해 주세요.';
-          authErrorMsg.classList.remove('hidden');
+          showToast('⚠️ 휴대폰 번호 뒷 8자리를 입력해 주세요.');
           phoneInput.focus();
           return;
         }
         if (!/^\d{4}$/.test(pin)) {
-          authErrorMsg.textContent = '비밀번호는 숫자 4자리로 입력해 주세요.';
-          authErrorMsg.classList.remove('hidden');
+          showToast('⚠️ 비밀번호 숫자 4자리를 입력해 주세요.');
           pinInput.focus();
           return;
         }
 
-        const fullPhoneId = `010-${rawDigits.slice(0, 4)}-${rawDigits.slice(4)}`;
-        const endpoint = isRegisterMode ? '/api/register' : '/api/login';
-        const payload = { username: fullPhoneId, password: pin, gameId: GAME_ID };
+        if (!tossWidgets) {
+          showToast('결제 위젯이 준비되지 않았습니다.');
+          return;
+        }
 
-        authSubmitBtn.disabled = true;
+        vipPaySubmitBtn.disabled = true;
+        vipPaySubmitBtnText.textContent = '결제창 연결 중...';
+
         try {
-          const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+          const fullPhoneId = `010-${rawDigits.slice(0, 4)}-${rawDigits.slice(4)}`;
+          const orderId = 'VIP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8).toUpperCase();
+          const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+
+          // 토스 결제 요청창 호출 (결제 성공 시 서버에 가입 및 VIP 데이터 연동)
+          await tossWidgets.requestPayment({
+            orderId: orderId,
+            orderName: 'AI게임장 모든게임 VIP 패키지 (평생 이용권)',
+            successUrl: baseUrl + '/payment-success.html?username=' + encodeURIComponent(fullPhoneId) + '&pin=' + encodeURIComponent(pin),
+            failUrl: baseUrl + '/payment-fail.html',
+            customerName: fullPhoneId,
           });
-          const data = await res.json();
-
-          if (!res.ok) {
-            authErrorMsg.textContent = data.error || '처리 중 오류가 발생했습니다.';
-            authErrorMsg.classList.remove('hidden');
-            return;
+        } catch (error) {
+          if (error && error.code === 'USER_CANCEL') {
+            showToast('결제가 취소되었습니다.');
+          } else {
+            showToast('결제 요청 중 오류가 발생했습니다.');
           }
-
-          authToken = data.token;
-          currentUsername = data.username || fullPhoneId;
-          localStorage.setItem(TOKEN_KEY, authToken);
-          localStorage.setItem(USER_KEY, currentUsername);
-
-          updateVipBannerUI();
-          vipModal.classList.add('hidden');
-          pinInput.value = '';
-
-          const vipNotice = isAdminAccount(currentUsername) ? ' (👑 관리자 VIP 자동 적용됨)' : '';
-          showToast(isRegisterMode
-            ? `👑 [${currentUsername}] VIP 회원가입 완료! 전 게임 통합 연동됨${vipNotice}`
-            : `👑 [${currentUsername}] VIP 로그인 완료!${vipNotice}`
-          );
-        } catch (err) {
-          authErrorMsg.textContent = '클라우드 게임 서버와 연결할 수 없습니다.';
-          authErrorMsg.classList.remove('hidden');
-        } finally {
-          authSubmitBtn.disabled = false;
+          vipPaySubmitBtn.disabled = false;
+          vipPaySubmitBtnText.textContent = '7,000원 결제하고 VIP 가입하기';
         }
       });
 
-      // 초기 로드 시 로그인 상태 반영
       updateVipBannerUI();
     })();
   </script>
