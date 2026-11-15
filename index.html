@@ -39,7 +39,7 @@
       <p class="text-xs text-slate-400 mt-1">기기 환경에 맞는 설치 버튼을 선택해 주세요</p>
     </header>
 
-    <!-- 1번: 안드로이드 / 윈도우 바로가기 -->
+    <!-- 1번: 안드로이드 / 윈도우 바로가기 (원본 로직 유지) -->
     <section class="bg-gradient-to-br from-slate-900 to-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-xl">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
@@ -151,7 +151,7 @@
     </footer>
   </div>
 
-  <!-- VIP 회원가입 & 통합 계정 로그인 모달 -->
+  <!-- VIP 회원가입 & 통합 계정 로그인 모달 (용사키우기 전화번호 8자리 + PIN 4자리 양식 유지) -->
   <div id="vipModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
     <div class="w-full max-w-sm bg-gradient-to-b from-slate-900 via-purple-950/35 to-slate-900 border-2 border-purple-400/60 rounded-2xl p-5 shadow-2xl shadow-purple-500/20">
       <div class="flex items-center justify-between mb-2">
@@ -185,7 +185,7 @@
         휴대폰 번호 뒷 8자리와 숫자 비밀번호 4자리로 간편하게 VIP 계정을 등록하거나 기존 계정에 로그인하세요.
       </p>
 
-      <!-- 간편 회원가입 / 기존 계정 로그인 탭 -->
+      <!-- 간편 회원가입 / 기존 계정 로그인 탭 (용사키우기 양식) -->
       <div class="flex rounded-xl bg-slate-950 p-1 border border-slate-800 mb-3.5">
         <button id="modeRegisterBtn" type="button" class="flex-1 py-1.5 rounded-lg text-xs font-extrabold bg-gradient-to-r from-purple-400 via-fuchsia-400 to-amber-300 text-slate-950 transition cursor-pointer">
           VIP 간편 회원가입
@@ -270,7 +270,7 @@
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
 
-      // 클라우드 서버 설정
+      // 클라우드 서버 설정 (용사키우기와 동일한 서버 및 스토리지 키 공유)
       const GAME_ID = 'clicker';
       const CLOUD_API_URL = 'https://02826k.duckdns.org';
       const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -299,10 +299,10 @@
         toastTimer = setTimeout(() => {
           box.classList.remove('opacity-100', 'translate-y-0');
           box.classList.add('opacity-0', 'translate-y-2');
-        }, 2800);
+        }, 2500);
       }
 
-      // 1번: 안드로이드 / 윈도우 바로가기
+      // 1번: 안드로이드 / 윈도우 바로가기 (원본 로직 유지)
       let deferredInstallPrompt = null;
       const installBtn = document.getElementById('androidInstallBtn');
       const installBtnText = document.getElementById('androidInstallBtnText');
@@ -326,7 +326,6 @@
       });
 
       installBtn.addEventListener('click', async () => {
-        // 모바일/크롬 PWA 설치 팝업 지원 시 우선 실행
         if (deferredInstallPrompt) {
           deferredInstallPrompt.prompt();
           const { outcome } = await deferredInstallPrompt.userChoice;
@@ -343,18 +342,9 @@
         const isInApp = /KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line|wv\)/i.test(ua);
 
         if (!isMobile) {
-          // 404 방지: 현재 정상 접속 중인 공식 바로가기 페이지 주소로 표준 Windows .url 포맷 생성
-          const targetUrl = window.location.href.split('#')[0].split('?')[0].trim();
-          const urlContent = [
-            '[{000214A0-0000-0000-C000-000000000046}]',
-            'Prop3=19,11',
-            '[InternetShortcut]',
-            'IDList=',
-            'URL=' + targetUrl,
-            ''
-          ].join('\r\n');
-
-          const blob = new Blob([urlContent], { type: 'application/internet-shortcut' });
+          const targetUrl = 'https://link.inpock.co.kr/aigame';
+          const urlContent = '[InternetShortcut]\r\nURL=' + targetUrl + '\r\n';
+          const blob = new Blob([urlContent], { type: 'text/plain;charset=utf-8' });
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
           a.download = 'AI게임장_바로가기.url';
@@ -394,7 +384,7 @@
         }
       });
 
-      // 3번: AI게임장 APK 설치하기
+      // 3번: AI게임장 APK 설치하기 (aigames.apk 존재 여부 확인 후 다운로드)
       document.getElementById('apkDownloadBtn').addEventListener('click', async () => {
         try {
           const res = await fetch('./aigames.apk', { method: 'HEAD' });
@@ -515,7 +505,6 @@
 
         const fullPhoneId = `010-${rawDigits.slice(0, 4)}-${rawDigits.slice(4)}`;
         const endpoint = isRegisterMode ? '/api/register' : '/api/login';
-
         const payload = { username: fullPhoneId, password: pin, gameId: GAME_ID };
 
         authSubmitBtn.disabled = true;
@@ -548,4 +537,16 @@
             : `👑 [${currentUsername}] VIP 로그인 완료!${vipNotice}`
           );
         } catch (err) {
-          authErrorMsg.textContent = '클라우드 게임 서버와
+          authErrorMsg.textContent = '클라우드 게임 서버와 연결할 수 없습니다.';
+          authErrorMsg.classList.remove('hidden');
+        } finally {
+          authSubmitBtn.disabled = false;
+        }
+      });
+
+      // 초기 로드 시 로그인 상태 반영
+      updateVipBannerUI();
+    })();
+  </script>
+</body>
+</html>
