@@ -38,88 +38,10 @@
       <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400">
         AI게임장 바로가기
       </h1>
-      <p class="text-xs text-slate-400 mt-1">기기 환경에 맞는 설치 버튼을 선택해 주세요</p>
+      <p class="text-xs text-slate-400 mt-1">기기 환경에 맞는 메뉴를 선택해 주세요</p>
     </header>
 
-    <!-- 1번: 안드로이드 / 윈도우 바로가기 (원본 로직 유지) -->
-    <section class="bg-gradient-to-br from-slate-900 to-amber-950/30 border border-amber-500/40 rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl shrink-0 overflow-hidden">
-            <img src="./icon.png" alt="AI게임장" class="w-full h-full object-cover"
-              onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='./icon.jpg';}else{this.style.display='none';this.nextElementSibling.style.display='inline';}" />
-            <span style="display:none">📲</span>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm font-black text-amber-300 truncate">AI게임장 바로가기</div>
-            <div class="text-[11px] text-slate-400 truncate">안드로이드 · 윈도우 바탕화면</div>
-          </div>
-        </div>
-        <button id="androidInstallBtn" type="button"
-          class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
-          <span id="androidInstallBtnText">아이콘 만들기</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- 2번: 아이폰(iOS) 바로가기 만들기 -->
-    <section class="bg-slate-900/90 border border-sky-500/35 rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-400/40 flex items-center justify-center text-2xl shrink-0">
-            🍎
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm font-black text-sky-300 truncate">아이폰 바로가기 만들기</div>
-            <div class="text-[11px] text-slate-400 truncate">Safari 홈 화면 아이콘 추가</div>
-          </div>
-        </div>
-        <button id="iosInstallBtn" type="button"
-          class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
-          아이폰 설치
-        </button>
-      </div>
-    </section>
-
-    <!-- 3번: AI게임장 APK 설치하기 -->
-    <section class="bg-slate-900/90 border border-emerald-500/35 rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center text-2xl shrink-0">
-            📦
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm font-black text-emerald-300 truncate">AI게임장 APK 설치하기</div>
-            <div class="text-[11px] text-slate-400 truncate">안드로이드 전용 앱 파일 (aigames.apk)</div>
-          </div>
-        </div>
-        <button id="apkDownloadBtn" type="button"
-          class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
-          APK 설치
-        </button>
-      </div>
-    </section>
-
-    <!-- 4번: 유튜브 채널 방문하기 -->
-    <section class="bg-slate-900/90 border border-rose-500/35 rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="w-11 h-11 rounded-xl bg-rose-500/15 border border-rose-400/40 flex items-center justify-center text-2xl shrink-0">
-            📺
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm font-black text-rose-300 truncate">유튜브 채널 방문하기</div>
-            <div class="text-[11px] text-slate-400 truncate">공식 유튜브 채널 시청하기</div>
-          </div>
-        </div>
-        <a href="https://www.youtube.com/@02826k" target="_blank" rel="noopener noreferrer"
-          class="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer text-center">
-          채널 방문
-        </a>
-      </div>
-    </section>
-
-    <!-- 5번: AI게임장 모든게임 VIP혜택 (홍보 배너형 카드) -->
+    <!-- 1번: AI게임장 모든게임 VIP혜택 (가장 위 배치) -->
     <section class="relative overflow-hidden bg-gradient-to-r from-purple-950/90 via-slate-900 to-fuchsia-950/90 border-2 border-purple-400/60 rounded-2xl p-4 shadow-xl shadow-purple-500/15">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
@@ -143,14 +65,102 @@
       </div>
     </section>
 
-    <!-- 하단 바로 열기 링크 -->
-    <footer class="text-center pt-1">
-      <a href="https://link.inpock.co.kr/aigame" target="_blank" rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-amber-300 transition">
-        <span>🎮 설치 없이 웹에서 바로 게임하기</span>
-        <span>→</span>
-      </a>
-    </footer>
+    <!-- 2번: 설치 없이 웹에서 바로 게임하기 (2번째 자리 이동, "입장" 버튼) -->
+    <section class="bg-gradient-to-br from-slate-900 to-indigo-950/30 border border-indigo-500/40 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-11 h-11 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-2xl shrink-0">
+            🎮
+          </div>
+          <div class="min-w-0">
+            <div class="text-sm font-black text-indigo-300 truncate">설치 없이 웹에서 바로 게임하기</div>
+            <div class="text-[11px] text-slate-400 truncate">링크: link.inpock.co.kr/aigame</div>
+          </div>
+        </div>
+        <a href="https://link.inpock.co.kr/aigame" target="_blank" rel="noopener noreferrer"
+          class="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer text-center">
+          입장
+        </a>
+      </div>
+    </section>
+
+    <!-- 3번: 유튜브 채널 방문 -->
+    <section class="bg-slate-900/90 border border-rose-500/35 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-11 h-11 rounded-xl bg-rose-500/15 border border-rose-400/40 flex items-center justify-center text-2xl shrink-0">
+            📺
+          </div>
+          <div class="min-w-0">
+            <div class="text-sm font-black text-rose-300 truncate">유튜브 채널 방문하기</div>
+            <div class="text-[11px] text-slate-400 truncate">공식 유튜브 채널 시청하기</div>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@02826k" target="_blank" rel="noopener noreferrer"
+          class="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer text-center">
+          채널 방문
+        </a>
+      </div>
+    </section>
+
+    <!-- 4번: 안드로이드 / 윈도우 바로가기 아이콘 만들기 -->
+    <section class="bg-slate-900/90 border border-amber-500/35 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl shrink-0 overflow-hidden">
+            <img src="./icon.png" alt="AI게임장" class="w-full h-full object-cover"
+              onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='./icon.jpg';}else{this.style.display='none';this.nextElementSibling.style.display='inline';}" />
+            <span style="display:none">📲</span>
+          </div>
+          <div class="min-w-0">
+            <div class="text-sm font-black text-amber-300 truncate">AI게임장 바로가기</div>
+            <div class="text-[11px] text-slate-400 truncate">안드로이드 · 윈도우 바탕화면</div>
+          </div>
+        </div>
+        <button id="androidInstallBtn" type="button"
+          class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
+          <span id="androidInstallBtnText">아이콘 만들기</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 5번: 아이폰(iOS) 바로가기 만들기 -->
+    <section class="bg-slate-900/90 border border-sky-500/35 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-400/40 flex items-center justify-center text-2xl shrink-0">
+            🍎
+          </div>
+          <div class="min-w-0">
+            <div class="text-sm font-black text-sky-300 truncate">아이폰 바로가기 만들기</div>
+            <div class="text-[11px] text-slate-400 truncate">Safari 홈 화면 아이콘 추가</div>
+          </div>
+        </div>
+        <button id="iosInstallBtn" type="button"
+          class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
+          아이폰 설치
+        </button>
+      </div>
+    </section>
+
+    <!-- 6번: AI게임장 APK 설치하기 -->
+    <section class="bg-slate-900/90 border border-emerald-500/35 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center text-2xl shrink-0">
+            📦
+          </div>
+          <div class="min-w-0">
+            <div class="text-sm font-black text-emerald-300 truncate">AI게임장 APK 설치하기</div>
+            <div class="text-[11px] text-slate-400 truncate">안드로이드 전용 앱 파일 (aigames.apk)</div>
+          </div>
+        </div>
+        <button id="apkDownloadBtn" type="button"
+          class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer">
+          APK 설치
+        </button>
+      </div>
+    </section>
   </div>
 
   <!-- VIP 결제 & 회원가입 팝업 모달 (토스페이먼츠 위젯 연동) -->
@@ -267,7 +277,6 @@
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
 
-      // 클라우드 서버 설정
       const GAME_ID = 'clicker';
       const CLOUD_API_URL = 'https://02826k.duckdns.org';
       const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -279,7 +288,6 @@
       let authToken = localStorage.getItem(TOKEN_KEY) || null;
       let currentUsername = localStorage.getItem(USER_KEY) || null;
 
-      // 토스페이먼츠 설정
       const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
       const VIP_PRICE = 7000;
 
@@ -300,7 +308,7 @@
         }, 2800);
       }
 
-      // 1번: 안드로이드 / 윈도우 바로가기
+      // 안드로이드 / 윈도우 바로가기
       let deferredInstallPrompt = null;
       const installBtn = document.getElementById('androidInstallBtn');
       const installBtnText = document.getElementById('androidInstallBtnText');
@@ -362,7 +370,7 @@
         }
       });
 
-      // 2번: 아이폰 바로가기 안내 모달
+      // 아이폰 바로가기 안내 모달
       const iosModal = document.getElementById('iosModal');
       document.getElementById('iosInstallBtn').addEventListener('click', () => {
         iosModal.classList.remove('hidden');
@@ -382,7 +390,7 @@
         }
       });
 
-      // 3번: AI게임장 APK 설치하기
+      // AI게임장 APK 설치하기
       document.getElementById('apkDownloadBtn').addEventListener('click', async () => {
         try {
           const res = await fetch('./aigames.apk', { method: 'HEAD' });
@@ -402,7 +410,7 @@
         }
       });
 
-      // 5번: VIP 결제 및 토스 위젯 팝업 관리
+      // VIP 결제 및 토스 위젯 팝업 관리
       const vipModal = document.getElementById('vipModal');
       const vipOpenModalBtn = document.getElementById('vipOpenModalBtn');
       const vipCloseBtn = document.getElementById('vipCloseBtn');
@@ -495,7 +503,6 @@
         showToast('로그아웃되었습니다.');
       });
 
-      // 토스페이먼츠 결제 요청 (결제 성공 후 서버 가입/VIP 처리)
       vipPaySubmitBtn.addEventListener('click', async () => {
         const rawDigits = phoneInput.value.replace(/\D/g, '');
         const pin = pinInput.value.trim();
@@ -524,7 +531,6 @@
           const orderId = 'VIP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8).toUpperCase();
           const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
 
-          // 토스 결제 요청창 호출 (결제 성공 시 서버에 가입 및 VIP 데이터 연동)
           await tossWidgets.requestPayment({
             orderId: orderId,
             orderName: 'AI게임장 모든게임 VIP 패키지 (평생 이용권)',
