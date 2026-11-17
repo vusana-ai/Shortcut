@@ -305,6 +305,22 @@
         }, 2800);
       }
 
+      // 안드로이드 인앱 브라우저 접속 시 처음부터 삼성 인터넷으로 자동 전환
+      const _ua = navigator.userAgent || '';
+      const _isAndroid = /Android/i.test(_ua);
+      const _isSamsung = /SamsungBrowser/i.test(_ua);
+      const _isInApp = /KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line|YouTube|wv\)/i.test(_ua);
+      function openInSamsungBrowser() {
+        const rawUrl = window.location.href.split('#')[0];
+        const cleanUrl = rawUrl.replace(/^https?:\/\//, '');
+        const sep = rawUrl.includes('?') ? '&' : '?';
+        const fallbackUrl = encodeURIComponent(rawUrl + (rawUrl.includes('sb=1') ? '' : sep + 'sb=1'));
+        window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.sec.android.app.sbrowser;S.browser_fallback_url=${fallbackUrl};end`;
+      }
+      if (_isAndroid && !_isSamsung && _isInApp && !window.location.search.includes('sb=1')) {
+        openInSamsungBrowser();
+      }
+
       // 안드로이드 / 윈도우 바로가기
       let deferredInstallPrompt = null;
       const installBtn = document.getElementById('androidInstallBtn');
@@ -356,11 +372,10 @@
           document.body.removeChild(a);
           URL.revokeObjectURL(a.href);
           showToast('💻 윈도우용 [AI게임장_바로가기.url]이 다운로드되었습니다!');
-        } else if (isAndroid && isInApp) {
-          const cleanUrl = window.location.href.split('#')[0].replace(/^https?:\/\//, '');
-          showToast('📲 인앱 브라우저에서는 설치가 제한되어 Chrome으로 이동합니다...');
+        } else if (isAndroid && !/SamsungBrowser/i.test(ua) && !window.location.search.includes('sb=1')) {
+          showToast('📲 삼성 인터넷 브라우저로 이동해 설치를 진행합니다...');
           setTimeout(() => {
-            window.location.href = 'intent://' + cleanUrl + '#Intent;scheme=https;package=com.android.chrome;end';
+            openInSamsungBrowser();
           }, 300);
         } else {
           showToast('⚠️ 브라우저 메뉴 [⋮] → [홈 화면에 추가]를 눌러주세요.');
