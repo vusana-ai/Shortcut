@@ -100,7 +100,7 @@
       </div>
     </section>
 
-    <!-- 4번: 바로가기만들기(안드로이드용) - 설치 / 설치완료 토글 -->
+    <!-- 4번: 바로가기만들기(안드로이드용) -->
     <section class="bg-slate-900/90 border border-amber-500/35 rounded-2xl p-4 shadow-xl">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
@@ -283,8 +283,6 @@
 
       const TOKEN_KEY = 'hero_clicker_jwt_token';
       const USER_KEY = 'hero_clicker_username';
-      const SHORTCUT_INSTALLED_KEY = 'aigame_android_shortcut_installed';
-
       let authToken = localStorage.getItem(TOKEN_KEY) || null;
       let currentUsername = localStorage.getItem(USER_KEY) || null;
 
@@ -307,24 +305,18 @@
       }
 
       // ============================================================
-      // 4번: 바로가기만들기(안드로이드용) - 설치 / 설치완료 토글
+      // 4번: 바로가기만들기(안드로이드용) - 설치 버튼
       // ============================================================
       let deferredInstallPrompt = null;
       const installBtn = document.getElementById('androidInstallBtn');
       const installBtnText = document.getElementById('androidInstallBtnText');
       const installSubText = document.getElementById('androidInstallSubText');
-      let isShortcutInstalled = localStorage.getItem(SHORTCUT_INSTALLED_KEY) === 'true';
 
-      function renderShortcutToggleUI() {
-        if (isShortcutInstalled) {
-          installBtnText.textContent = '설치완료';
-          installSubText.textContent = '바탕화면 아이콘 설치됨 (다시 누르면 초기화)';
-          installBtn.className = 'px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer min-w-[76px] text-center';
-        } else {
-          installBtnText.textContent = '설치';
-          installSubText.textContent = '휴대폰 바탕화면에 바로가기 아이콘 생성';
-          installBtn.className = 'px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer min-w-[76px] text-center';
-        }
+      // 설치 후에도 버튼은 토글되지 않고 일반적인 설치 버튼으로 유지한다.
+      function renderShortcutInstallUI(message = '휴대폰 바탕화면에 바로가기 아이콘 생성') {
+        installBtnText.textContent = '설치';
+        installSubText.textContent = message;
+        installBtn.className = 'px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer min-w-[76px] text-center';
       }
 
       window.addEventListener('beforeinstallprompt', (e) => {
@@ -334,41 +326,26 @@
 
       window.addEventListener('appinstalled', () => {
         deferredInstallPrompt = null;
-        isShortcutInstalled = true;
-        localStorage.setItem(SHORTCUT_INSTALLED_KEY, 'true');
-        renderShortcutToggleUI();
+        renderShortcutInstallUI('바탕화면에 바로가기 아이콘이 설치되었습니다');
         showToast('📲 바탕화면에 [AI게임장] 바로가기 아이콘이 설치되었습니다!');
       });
 
       installBtn.addEventListener('click', async () => {
-        if (isShortcutInstalled) {
-          isShortcutInstalled = false;
-          localStorage.setItem(SHORTCUT_INSTALLED_KEY, 'false');
-          renderShortcutToggleUI();
-          showToast('🔄 [설치] 상태로 전환되었습니다.');
-          return;
-        }
-
         if (deferredInstallPrompt) {
           deferredInstallPrompt.prompt();
           const { outcome } = await deferredInstallPrompt.userChoice;
           if (outcome === 'accepted') {
-            isShortcutInstalled = true;
-            localStorage.setItem(SHORTCUT_INSTALLED_KEY, 'true');
-            renderShortcutToggleUI();
-            showToast('📲 바탕화면에 바로가기 아이콘을 생성 중입니다...');
+            renderShortcutInstallUI('바탕화면에 바로가기를 생성 중입니다');
+            showToast('📲 바탕화면에 바로가기를 생성 중입니다...');
           }
           deferredInstallPrompt = null;
           return;
         }
 
         showToast('📲 브라우저 우측 상단 [⋮] → [홈 화면에 추가]를 눌러주세요!');
-        isShortcutInstalled = true;
-        localStorage.setItem(SHORTCUT_INSTALLED_KEY, 'true');
-        renderShortcutToggleUI();
       });
 
-      renderShortcutToggleUI();
+      renderShortcutInstallUI();
 
       // ============================================================
       // 5번: 아이폰 바로가기 안내 모달
