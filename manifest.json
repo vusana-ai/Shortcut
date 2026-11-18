@@ -7,16 +7,17 @@
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#0f172a",
+  "description": "AI게임장은 다양한 웹게임을 모아놓은 종합 게임 포털입니다 언제 어디서나 간편하게 즐겨보세요!",
   "icons": [
     {
       "src": "./icon.png",
-      "sizes": "192x192 512x512",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "./icon.png",
-      "sizes": "192x192 512x512",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
